@@ -1,5 +1,8 @@
 import colors from 'vuetify/es5/util/colors'
+import 'firebase/compat/auth'
+import firebase from 'firebase/compat/app'
 
+import 'firebase/compat/firestore'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -26,7 +29,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/firebase.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -41,10 +44,12 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-
+  
   modules: [
-    [
+    
       '@nuxtjs/firebase',
+  ],
+  firebase:
       {
         config: {
           apiKey: 'AIzaSyDJfEcHwLMIQbTvWiLRSIndDwKFa6Fb420',
@@ -53,17 +58,13 @@ export default {
           storageBucket: 'control-app-a014e.appspot.com',
           messagingSenderId: '207916838663',
           appId: '1:207916838663:web:1e1d37565881adb32edfa2',
-          
+          measurementId: '<measurementId>'
         },
         services: {
           auth: true, // Just as example. Can be any other service.
           firestore: true,
         }
       }
-    ]
-  ],
-
-  
     
   
 

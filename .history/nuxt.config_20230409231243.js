@@ -1,5 +1,8 @@
 import colors from 'vuetify/es5/util/colors'
+import 'firebase/compat/auth'
+import firebase from 'firebase/compat/app'
 
+import 'firebase/compat/firestore'
 
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -26,7 +29,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['~/plugins/firebase.js'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
