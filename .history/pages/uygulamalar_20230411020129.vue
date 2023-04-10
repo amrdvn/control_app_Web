@@ -42,16 +42,19 @@ export default {
 
   data() {
     return {
-      uygulamaIstatistikleri: [], 
+      uygulamaIstatistikleri: [], // Firestore'dan çekilen uygulama istatistiklerinin tutulacağı dizi
     }
   },
 
   created() {
+    // Oturum açmış kullanıcının UID'sini alıyoruz
     const kullaniciUid = firebase.auth().currentUser.uid;
 
+    // Firestore'dan kullanıcının uygulama istatistiklerini çekiyoruz
     firebase.firestore().collection('logs').doc(kullaniciUid).collection('uygulama_istatistik')
       .get()
       .then(querySnapshot => {
+        // Çekilen kayıtları diziye ekliyoruz
         querySnapshot.forEach(doc => {
           this.uygulamaIstatistikleri.push(doc.data());
         })
@@ -71,7 +74,7 @@ export default {
     const dakika = ('0' + date.getMinutes()).slice(-2);
     const saniye = ('0' + date.getSeconds()).slice(-2);
 
-    return `${gun}.${ay}.${yil}  ${saat}:${dakika}:${saniye}`;
+    return `${gun} ${saat}:${dakika}:${saniye}`;
   }
 }
 }

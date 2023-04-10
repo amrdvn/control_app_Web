@@ -42,13 +42,15 @@ export default {
 
   data() {
     return {
-      uygulamaIstatistikleri: [], 
+      uygulamaIstatistikleri: [], // Firestore'dan çekilen uygulama istatistiklerinin tutulacağı dizi
     }
   },
 
   created() {
+    // Oturum açmış kullanıcının UID'sini alıyoruz
     const kullaniciUid = firebase.auth().currentUser.uid;
 
+    // Firestore'dan kullanıcının uygulama istatistiklerini çekiyoruz
     firebase.firestore().collection('logs').doc(kullaniciUid).collection('uygulama_istatistik')
       .get()
       .then(querySnapshot => {

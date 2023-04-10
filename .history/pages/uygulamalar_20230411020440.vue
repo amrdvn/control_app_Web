@@ -42,7 +42,7 @@ export default {
 
   data() {
     return {
-      uygulamaIstatistikleri: [], 
+      uygulamaIstatistikleri: [], // Firestore'dan çekilen uygulama istatistiklerinin tutulacağı dizi
     }
   },
 
