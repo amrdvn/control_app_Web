@@ -14,7 +14,7 @@
         <tbody>
           <tr v-for="(istatistik, index) in uygulamaIstatistikleri" :key="index">
             <td>{{ istatistik.uygulamaAdi }}</td>
-            <td>{{ istatistik.sonKullanim}}</td>
+            <td>{{ istatistik.sonKullanim }}</td>
           </tr>
         </tbody>
       </table>
@@ -42,21 +42,20 @@ export default {
 
   data() {
     return {
-      uygulamaIstatistikleri: [], // Firestore'dan çekilen uygulama istatistiklerinin tutulacağı dizi
+      uygulamaIstatistikleri: [],
     }
   },
 
   created() {
-    // Oturum açmış kullanıcının UID'sini alıyoruz
     const kullaniciUid = firebase.auth().currentUser.uid;
 
-    // Firestore'dan kullanıcının uygulama istatistiklerini çekiyoruz
     firebase.firestore().collection('logs').doc(kullaniciUid).collection('uygulama_istatistik')
       .get()
       .then(querySnapshot => {
-        // Çekilen kayıtları diziye ekliyoruz
         querySnapshot.forEach(doc => {
-          this.uygulamaIstatistikleri.push(doc.data());
+          const istatistik = doc.data();
+          istatistik.sonKullanim = new Date(istatistik.sonKullanim.seconds * 1000).toISOString();
+          this.uygulamaIstatistikleri.push(istatistik);
         })
       })
       .catch(error => {
@@ -65,7 +64,7 @@ export default {
   },
 
   methods: {
-     formatTarih(tarih) {
+    formatTarih(tarih) {
       return tarih.slice(0, 19).replace('T', ' ');
     }
   }

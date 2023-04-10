@@ -14,8 +14,7 @@
         <tbody>
           <tr v-for="(istatistik, index) in uygulamaIstatistikleri" :key="index">
             <td>{{ istatistik.uygulamaAdi }}</td>
-            <td>{{ istatistik.sonKullanim}}</td>
-          </tr>
+<td>{{ formatTarih(istatistik.sonKullanim.toDate()) }}</td>          </tr>
         </tbody>
       </table>
     </div>

@@ -56,7 +56,10 @@ export default {
       .then(querySnapshot => {
         // Çekilen kayıtları diziye ekliyoruz
         querySnapshot.forEach(doc => {
-          this.uygulamaIstatistikleri.push(doc.data());
+          const istatistik = doc.data();
+          const tarih = new Date(istatistik.sonKullanim.seconds * 1000).toISOString();
+          istatistik.sonKullanim = tarih.substring(0, tarih.length - 5).replace('T', ' ');
+          this.uygulamaIstatistikleri.push(istatistik);
         })
       })
       .catch(error => {

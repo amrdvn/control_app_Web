@@ -14,7 +14,7 @@
         <tbody>
           <tr v-for="(istatistik, index) in uygulamaIstatistikleri" :key="index">
             <td>{{ istatistik.uygulamaAdi }}</td>
-            <td>{{ istatistik.sonKullanim}}</td>
+            <td>{{ formatTarih(istatistik.sonKullanim.toDate()) }}</td>
           </tr>
         </tbody>
       </table>
@@ -47,11 +47,11 @@ export default {
   },
 
   created() {
-    // Oturum açmış kullanıcının UID'sini alıyoruz
+    // Oturum açılmış kullanıcının UID'sini alıyoruz
     const kullaniciUid = firebase.auth().currentUser.uid;
 
     // Firestore'dan kullanıcının uygulama istatistiklerini çekiyoruz
-    firebase.firestore().collection('logs').doc(kullaniciUid).collection('uygulama_istatistik')
+    firebase.firestore().collection('logs').doc(kullaniciUid).collection('uygulamaIstatistik')
       .get()
       .then(querySnapshot => {
         // Çekilen kayıtları diziye ekliyoruz
@@ -65,8 +65,15 @@ export default {
   },
 
   methods: {
-     formatTarih(tarih) {
-      return tarih.slice(0, 19).replace('T', ' ');
+    formatTarih(tarih) {
+      const tarihObjesi = new Date(tarih);
+      const yil = tarihObjesi.getFullYear();
+      const ay = tarihObjesi.getMonth() + 1;
+      const gun = tarihObjesi.getDate();
+      const saat = tarihObjesi.getHours();
+      const dakika = tarihObjesi.getMinutes();
+      const saniye = tarihObjesi.getSeconds();
+      return `${yil}-${ay.toString().padStart(2, '0')}-${gun.toString().padStart(2, '0')} ${saat.toString().padStart(2, '0')}:${dakika.toString().padStart(2, '0')}:${saniye.toString().padStart(2, '0')}`;
     }
   }
 }

@@ -14,7 +14,7 @@
         <tbody>
           <tr v-for="(istatistik, index) in uygulamaIstatistikleri" :key="index">
             <td>{{ istatistik.uygulamaAdi }}</td>
-            <td>{{ istatistik.sonKullanim}}</td>
+            <td>{{ formatTarih(istatistik.sonKullanim.toDate()) }}</td>
           </tr>
         </tbody>
       </table>
@@ -65,8 +65,15 @@ export default {
   },
 
   methods: {
-     formatTarih(tarih) {
-      return tarih.slice(0, 19).replace('T', ' ');
+    formatTarih(tarih) {
+      const gun = tarih.getDate().toString().padStart(2, '0');
+      const ay = (tarih.getMonth() + 1).toString().padStart(2, '0');
+      const yil = tarih.getFullYear().toString();
+      const saat = tarih.getHours().toString().padStart(2, '0');
+      const dakika = tarih.getMinutes().toString().padStart(2, '0');
+      const saniye = tarih.getSeconds().toString().padStart(2, '0');
+      const formatliTarih = `${yil}-${ay}-${gun} ${saat}:${dakika}:${saniye}`;
+      return formatliTarih;
     }
   }
 }

@@ -32,7 +32,6 @@ import 'firebase/firestore';
 import footerkismi from '~/components/footer-kismi.vue';
 import menulist from '~/components/menu-list.vue';
 import oturumacik from '~/components/oturum-acik.vue';
-
 export default {
   components: {
     menulist,
@@ -42,32 +41,26 @@ export default {
 
   data() {
     return {
-      uygulamaIstatistikleri: [], // Firestore'dan çekilen uygulama istatistiklerinin tutulacağı dizi
+      uygulamaIstatistikleri: [],
     }
   },
 
   created() {
-    // Oturum açmış kullanıcının UID'sini alıyoruz
     const kullaniciUid = firebase.auth().currentUser.uid;
 
-    // Firestore'dan kullanıcının uygulama istatistiklerini çekiyoruz
-    firebase.firestore().collection('logs').doc(kullaniciUid).collection('uygulama_istatistik')
+    firebase.firestore().collection('logs').doc(kullaniciUid).collection('uygulamaIstatistik')
       .get()
       .then(querySnapshot => {
-        // Çekilen kayıtları diziye ekliyoruz
         querySnapshot.forEach(doc => {
-          this.uygulamaIstatistikleri.push(doc.data());
+          const istatistik = doc.data();
+          const tarih = new Date(istatistik.sonKullanim.seconds * 1000).toISOString();
+          istatistik.sonKullanim = tarih.substring(0, tarih.length - 5).replace('T', ' ');
+          this.uygulamaIstatistikleri.push(istatistik);
         })
       })
       .catch(error => {
         console.error(error);
       })
-  },
-
-  methods: {
-     formatTarih(tarih) {
-      return tarih.slice(0, 19).replace('T', ' ');
-    }
   }
 }
 </script>
