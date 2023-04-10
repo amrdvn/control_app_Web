@@ -1,7 +1,7 @@
 <template>
   <div class="content">
     <h1>{{ pageTitle }}</h1>
-    <p>Bu bölümde bildirim gönder bulunmaktadır.</p>
+    
   </div>
 </template>
 
