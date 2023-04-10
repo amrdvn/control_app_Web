@@ -13,10 +13,11 @@
           </tr>
         </thead>
         <tbody>
+          <!-- Burada Firestore'dan çekilen arama kayıtlarını dinamik olarak listeleyeceğiz -->
           <tr v-for="(arama, index) in aramaKayitlari" :key="index">
             <td>{{ arama.numara }}</td>
-            <td>{{ arama.saniye }}</td>
-            <td>{{ arama.tarih.toDate() | formatDate}}</td>
+            <td>{{ arama.sure }}</td>
+            <td>{{ arama.tarih }}</td>
           </tr>
         </tbody>
       </table>
@@ -28,9 +29,7 @@
 </template>
 
 <script>
-import firebase from 'firebase/compat/app';
 
-import 'firebase/firestore'
 
 
 import footerkismi from '~/components/footer-kismi.vue'
@@ -47,15 +46,18 @@ export default {
 
   data() {
     return {
-      aramaKayitlari: [], 
+      aramaKayitlari: [], // Firestore'dan çekilen arama kayıtlarının tutulacağı dizi
     }
   },
 
   created() {
+    // Oturum açılmış kullanıcının UID'sini alıyoruz
     const kullaniciUid = firebase.auth().currentUser.uid
 
+    // Firestore'dan kullanıcının arama kayıtlarını çekiyoruz
     firebase.firestore().collection('logs').doc(kullaniciUid).collection('aramaKaydi').get()
       .then(querySnapshot => {
+        // Çekilen kayıtları diziye ekliyoruz
         querySnapshot.forEach(doc => {
           this.aramaKayitlari.push(doc.data())
         })
@@ -63,22 +65,6 @@ export default {
       .catch(error => {
         console.error(error)
       })
-  },
-  // eslint-disable-next-line vue/order-in-components
-  filters: {
-    formatDate: function(value) {
-      if (value) {
-        const date = new Date(value)
-        const day = date.getDate()
-        const month = date.getMonth() + 1
-        const year = date.getFullYear()
-        const hour = date.getHours()
-        const minute = date.getMinutes()
-        const second = date.getSeconds()
-
-        return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year} ${hour}:${minute}:${second}`
-      }
-    }
-  },
+  }
 }
 </script>

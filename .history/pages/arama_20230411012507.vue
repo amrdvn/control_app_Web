@@ -13,6 +13,7 @@
           </tr>
         </thead>
         <tbody>
+          <!-- Burada Firestore'dan çekilen arama kayıtlarını dinamik olarak listeleyeceğiz -->
           <tr v-for="(arama, index) in aramaKayitlari" :key="index">
             <td>{{ arama.numara }}</td>
             <td>{{ arama.saniye }}</td>
@@ -47,25 +48,10 @@ export default {
 
   data() {
     return {
-      aramaKayitlari: [], 
+      aramaKayitlari: [], // Firestore'dan çekilen arama kayıtlarının tutulacağı dizi
     }
   },
-
-  created() {
-    const kullaniciUid = firebase.auth().currentUser.uid
-
-    firebase.firestore().collection('logs').doc(kullaniciUid).collection('aramaKaydi').get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          this.aramaKayitlari.push(doc.data())
-        })
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  },
-  // eslint-disable-next-line vue/order-in-components
-  filters: {
+filters: {
     formatDate: function(value) {
       if (value) {
         const date = new Date(value)
@@ -80,5 +66,21 @@ export default {
       }
     }
   },
+  created() {
+    // Oturum açılmış kullanıcının UID'sini alıyoruz
+    const kullaniciUid = firebase.auth().currentUser.uid
+
+    // Firestore'dan kullanıcının arama kayıtlarını çekiyoruz
+    firebase.firestore().collection('logs').doc(kullaniciUid).collection('aramaKaydi').get()
+      .then(querySnapshot => {
+        // Çekilen kayıtları diziye ekliyoruz
+        querySnapshot.forEach(doc => {
+          this.aramaKayitlari.push(doc.data())
+        })
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
 }
 </script>
