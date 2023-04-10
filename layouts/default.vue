@@ -1,144 +1,23 @@
 <template>
-<html>
-	<head><title>Control App Web Paneli</title></head>
- 	<body>
-	<div class="container">
-    <menulist/>
-		<icerikkismi/>
-		<footerkismi/>
-  </div>
-  </body>
-</html>
+  <nuxt/>
 </template>
-<script>
-import footerkismi from '~/components/footer-kismi.vue'
-import icerikkismi from '~/components/icerik-kismi.vue'
-import menulist from '~/components/menu-list.vue'
 
+<script>
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import login from '~/components/login.vue'
 export default {
-  components: {
-	menulist,
-	icerikkismi,
-	footerkismi,
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn
+    }
   },
+  mounted() {
+    if (this.isLoggedIn) {
+      this.$router.push('/')
+    } else {
+      this.$router.push('/error')
+    }
+  }
 }
 </script>
-
-
-<style>
-		body {
-            margin: 0;
-            padding: 0;
-            background-color: #f6f8fa;
-            font-family: Arial, sans-serif;
-            overflow-x: hidden;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-        }
-
-        .form {
-            background-color: #fff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-            padding: 40px;
-            border-radius: 5px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .form h1 {
-            margin: 0 0 20px 0;
-            font-size: 24px;
-            font-weight: 600;
-            color: #4a4a4a;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .form input[type="text"], 
-        .form input[type="password"], 
-        .form input[type="email"] {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            background-color: #f2f2f2;
-            margin-bottom: 20px;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        .form input[type="submit"] {
-            background-color: #1a8cff;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .form input[type="submit"]:hover {
-            background-color: #0d6aad;
-        }
-
-        .form span {
-            font-size: 14px;
-            color: #777;
-            margin-top: 10px;
-        }
-
-        .form a {
-            color: #1a8cff;
-            text-decoration: none;
-            font-size: 14px;
-            margin-top: 10px;
-        }
-
-        .footer {
-            background-color: #e9ecef;
-            color: #4a4a4a;
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
-
-        .form span.warning {
-            color: #ff0000;
-            margin-top: 10px;
-            font-size: 15px;
-            text-align: center;
-        }
-
-        .error {
-            position: absolute;
-            font-size: 18px;
-            color: #dc3545;
-            background-color: #ffdddd;
-            padding: 5px;
-            border-radius: 5px;
-        }
-
-        .error.top {
-            bottom: 100px;
-        }
-
-        .error.bottom {
-            bottom: -40px;
-        }
-        
-	</style>
-
