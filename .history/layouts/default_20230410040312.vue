@@ -24,18 +24,15 @@ export default {
         // eslint-disable-next-line no-console
         console.log(user)
         this.user=user;
-        if(!user)
-        {
-            this.$router.push('/error')
+      }) },
+        signout(){
+            firebase.auth().signOut().then(result=>{
+                // eslint-disable-next-line no-console
+                console.log(result)
+                this.user=''
+                this.$router.push('/')
+            })
         }
-        else
-        {
-          this.$router.push('/')
-        }
-        
-      }) 
-      },
-        
     }
 }
 </script>

@@ -31,10 +31,7 @@ export default {
        user: '',
     }
   },
-  mounted(){
-      this.oturum()
-     
-    }, 
+  
   methods:{
         pressed(){
            firebase.auth().signInWithEmailAndPassword(this.email,this.password).then(user=>{
@@ -46,23 +43,7 @@ export default {
                this.errors=error;
                this.$router.push('/error')
            })
-        },
-        oturum(){
-          firebase.auth().onAuthStateChanged(user=>{
-        // eslint-disable-next-line no-console
-        console.log(user)
-        this.user=user;
-        if(!user)
-        {
-            this.$router.push('/error')
         }
-        else
-        {
-          this.$router.push('/')
-        }
-        
-      }) 
-      },
     },
     
     

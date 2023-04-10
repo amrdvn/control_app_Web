@@ -24,9 +24,9 @@ export default {
         // eslint-disable-next-line no-console
         console.log(user)
         this.user=user;
-        if(!user)
+        if(user==null)
         {
-            this.$router.push('/error')
+            this.$router.push('/')
         }
         else
         {

@@ -46,23 +46,7 @@ export default {
                this.errors=error;
                this.$router.push('/error')
            })
-        },
-        oturum(){
-          firebase.auth().onAuthStateChanged(user=>{
-        // eslint-disable-next-line no-console
-        console.log(user)
-        this.user=user;
-        if(!user)
-        {
-            this.$router.push('/error')
         }
-        else
-        {
-          this.$router.push('/')
-        }
-        
-      }) 
-      },
     },
     
     

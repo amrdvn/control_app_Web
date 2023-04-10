@@ -25,16 +25,8 @@ export default {
         console.log(user)
         this.user=user;
         if(!user)
-        {
-            this.$router.push('/error')
-        }
-        else
-        {
-          this.$router.push('/')
-        }
-        
-      }) 
-      },
+        {}
+      }) },
         
     }
 }
