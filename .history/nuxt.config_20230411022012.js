@@ -29,9 +29,7 @@ export default {
   plugins: [
     {
       
-      src: '~/plugins/firebase-messaging.js',
-      // eslint-disable-next-line no-dupe-keys
-      src: '~/plugins/firebase.js', mode: 'client'
+      src: '~/plugins/firebase-messaging.js'
   }],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

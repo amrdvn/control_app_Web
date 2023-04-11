@@ -14,9 +14,9 @@
       <p class="date-value">{{formatDate(sonGiris)}}</p>
       <br>
     </div>
-    <div v-if="uyelikTarihi" class="date-info">
+    <div v-if="membershipDate" class="date-info">
       <p class="date-title">Üyelik tarihi:</p>
-      <p class="date-value">{{formatDate(uyelikTarihi)}}</p>
+      <p class="date-value">{{formatDate(membershipDate)}}</p>
       <br>
     </div>
   </div>
@@ -32,7 +32,7 @@ export default {
     return {
       user: null,
       sonGiris: null,
-      uyelikTarihi: null,
+      membershipDate: null,
       adSoyad: ''
     }
   },
@@ -45,7 +45,7 @@ export default {
         if (user) {
           this.user = user;
           this.sonGiris = user.metadata.lastSignInTime;
-          this.uyelikTarihi = user.metadata.creationTime;
+          this.membershipDate = user.metadata.creationTime;
           this.getadSoyad();
         } else {
           this.user = null;
@@ -53,7 +53,6 @@ export default {
       });
     },
     signout() {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       firebase.auth().signOut().then(result => {
         this.user = null;
         this.$router.push('/error');

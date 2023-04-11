@@ -17,8 +17,7 @@
 </template>
 
 <script>
-import firebase from 'firebase/compat/app';
-
+import firebase from 'firebase/compact/app'
 import 'firebase/messaging'
 
 
@@ -51,7 +50,7 @@ export default {
           notification: {
             title: this.title,
             body: this.body,
-            click_action: alert("Başarılı - Bildirim Gönderildi..")
+            click_action: alert("")
           },
           to: token
         }

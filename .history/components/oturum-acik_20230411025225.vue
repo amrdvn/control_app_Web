@@ -1,23 +1,17 @@
 <template>
-  <div class="menu">
+  <div class="menuu">
     <div v-if="user" class="user-info">
       <img src="~/assets/icon/user.jpg" alt="User Icon">
       <div class="user-details">
-        <p>{{adSoyad}}</p>
+        <p>{{user.name}}</p>
         <p>{{user.email}}</p>
       </div>
     </div>
     <button class="logout-btn" @click="signout">Çıkış Yap</button>
-    <div><br></div>
-    <div v-if="sonGiris" class="date-info">
-      <p class="date-title">Son giriş:</p>
-      <p class="date-value">{{formatDate(sonGiris)}}</p>
-      <br>
-    </div>
-    <div v-if="uyelikTarihi" class="date-info">
-      <p class="date-title">Üyelik tarihi:</p>
-      <p class="date-value">{{formatDate(uyelikTarihi)}}</p>
-      <br>
+    <div class="user-dates" v-if="lastSignInDate && creationDate">
+      <p><strong>Son Giriş:</strong> {{formatDate(lastSignInDate)}}</p>
+      <hr>
+      <p><strong>Üyelik Tarihi:</strong> {{formatDate(creationDate)}}</p>
     </div>
   </div>
 </template>
@@ -25,15 +19,13 @@
 <script>
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
 
 export default {
   data(){
     return {
       user: null,
-      sonGiris: null,
-      uyelikTarihi: null,
-      adSoyad: ''
+      lastSignInDate: null,
+      creationDate: null
     }
   },
   mounted() {
@@ -42,19 +34,19 @@ export default {
   methods: {
     oturum() {
       firebase.auth().onAuthStateChanged(user => {
+        console.log(user);
         if (user) {
           this.user = user;
-          this.sonGiris = user.metadata.lastSignInTime;
-          this.uyelikTarihi = user.metadata.creationTime;
-          this.getadSoyad();
+          this.lastSignInDate = user.metadata.lastSignInTime;
+          this.creationDate = user.metadata.creationTime;
         } else {
           this.user = null;
         }
       });
     },
     signout() {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       firebase.auth().signOut().then(result => {
+        console.log(result);
         this.user = null;
         this.$router.push('/error');
       });
@@ -66,16 +58,48 @@ export default {
         hour12: false
       };
       return new Date(date).toLocaleString('tr-TR', options);
-    },
-    async getadSoyad() {
-      const db = firebase.firestore();
-      const userRef = db.collection('users').doc(this.user.uid);
-      const doc = await userRef.get();
-      if (doc.exists) {
-        const data = doc.data();
-        this.adSoyad = data.Ad + ' ' + data.Soyad;
-      }
     }
   }
 }
 </script>
+
+<style>
+.menuu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.user-details {
+  margin-left: 1rem;
+}
+
+.logout-btn {
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #e74c3c;
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.user-dates {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.user-dates p {
+  margin-bottom: 0.5rem;
+}
+</style>

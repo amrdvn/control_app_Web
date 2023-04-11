@@ -3,21 +3,19 @@
     <div v-if="user" class="user-info">
       <img src="~/assets/icon/user.jpg" alt="User Icon">
       <div class="user-details">
-        <p>{{adSoyad}}</p>
+        <p>{{user.name}}</p>
         <p>{{user.email}}</p>
       </div>
     </div>
     <button class="logout-btn" @click="signout">Çıkış Yap</button>
-    <div><br></div>
-    <div v-if="sonGiris" class="date-info">
+    <br>
+    <div v-if="lastSignInDate" class="date-info">
       <p class="date-title">Son giriş:</p>
-      <p class="date-value">{{formatDate(sonGiris)}}</p>
-      <br>
+      <p class="date-value">{{formatDate(lastSignInDate)}}</p>
     </div>
-    <div v-if="uyelikTarihi" class="date-info">
+    <div v-if="membershipDate" class="date-info">
       <p class="date-title">Üyelik tarihi:</p>
-      <p class="date-value">{{formatDate(uyelikTarihi)}}</p>
-      <br>
+      <p class="date-value">{{formatDate(membershipDate)}}</p>
     </div>
   </div>
 </template>
@@ -25,15 +23,13 @@
 <script>
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
 
 export default {
   data(){
     return {
       user: null,
-      sonGiris: null,
-      uyelikTarihi: null,
-      adSoyad: ''
+      lastSignInDate: null,
+      membershipDate: null
     }
   },
   mounted() {
@@ -42,19 +38,19 @@ export default {
   methods: {
     oturum() {
       firebase.auth().onAuthStateChanged(user => {
+        console.log(user);
         if (user) {
           this.user = user;
-          this.sonGiris = user.metadata.lastSignInTime;
-          this.uyelikTarihi = user.metadata.creationTime;
-          this.getadSoyad();
+          this.lastSignInDate = user.metadata.lastSignInTime;
+          this.membershipDate = user.metadata.creationTime;
         } else {
           this.user = null;
         }
       });
     },
     signout() {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       firebase.auth().signOut().then(result => {
+        console.log(result);
         this.user = null;
         this.$router.push('/error');
       });
@@ -66,15 +62,6 @@ export default {
         hour12: false
       };
       return new Date(date).toLocaleString('tr-TR', options);
-    },
-    async getadSoyad() {
-      const db = firebase.firestore();
-      const userRef = db.collection('users').doc(this.user.uid);
-      const doc = await userRef.get();
-      if (doc.exists) {
-        const data = doc.data();
-        this.adSoyad = data.Ad + ' ' + data.Soyad;
-      }
     }
   }
 }

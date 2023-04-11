@@ -17,8 +17,7 @@
 </template>
 
 <script>
-import firebase from 'firebase/compat/app';
-
+import firebase from 'firebase/compact/app'
 import 'firebase/messaging'
 
 

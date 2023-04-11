@@ -53,7 +53,6 @@ export default {
       });
     },
     signout() {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       firebase.auth().signOut().then(result => {
         this.user = null;
         this.$router.push('/error');

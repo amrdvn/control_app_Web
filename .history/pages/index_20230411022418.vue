@@ -17,15 +17,11 @@
 </template>
 
 <script>
-import firebase from 'firebase/compat/app';
-
-import 'firebase/messaging'
-
-
 import footerkismi from '~/components/footer-kismi.vue'
 import menulist from '~/components/menu-list.vue'
 import oturumacik from '~/components/oturum-acik.vue'
-
+import firebase from 'firebase/app'
+import 'firebase/messaging'
 
 export default {
   components: {
@@ -51,7 +47,7 @@ export default {
           notification: {
             title: this.title,
             body: this.body,
-            click_action: alert("Başarılı - Bildirim Gönderildi..")
+            click_action: 'https://example.com'
           },
           to: token
         }

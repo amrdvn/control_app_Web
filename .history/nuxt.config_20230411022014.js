@@ -30,7 +30,6 @@ export default {
     {
       
       src: '~/plugins/firebase-messaging.js',
-      // eslint-disable-next-line no-dupe-keys
       src: '~/plugins/firebase.js', mode: 'client'
   }],
 
