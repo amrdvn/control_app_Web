@@ -1,7 +1,6 @@
-import firebase from 'firebase/compat/app'
-import 'firebase/compat/auth'
-import 'firebase/compat/firestore'
-import 'firebase/compat/messaging'
+import firebase from 'firebase/compat/app';
+import 'firebase/auth'
+import 'firebase/firestore'
 
 const firebaseConfig = {
     apiKey: 'AIzaSyDJfEcHwLMIQbTvWiLRSIndDwKFa6Fb420',
@@ -12,9 +11,12 @@ const firebaseConfig = {
     appId: '1:207916838663:web:1e1d37565881adb32edfa2',
 }
 
-// Check if firebase app is already initialized
 if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig)
-}
-
-export { firebase }
+    firebase.initializeApp(firebaseConfig);
+  }
+  
+  try {
+    
+  } catch (error) {
+    
+  }

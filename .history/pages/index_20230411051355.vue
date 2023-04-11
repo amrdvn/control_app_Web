@@ -3,7 +3,7 @@
     <menulist />
     <div class="content">
       <h1>Bildirim Gönder</h1>
-      <form @submit.prevent="submit">
+      <form @submit.prevent="sendMessage">
         <label for="baslik">Başlık:</label><br>
         <input type="text" id="baslik" name="baslik" v-model="title"><br><br>
         <label for="icerik">İçerik:</label><br>
@@ -19,7 +19,6 @@
 <script>
 import firebase from 'firebase/compat/app'
 import 'firebase/messaging'
-import axios from 'axios';
 
 
 import footerkismi from '~/components/footer-kismi.vue'
@@ -33,43 +32,34 @@ export default {
     oturumacik,
     footerkismi
   },
-  data() {
-    return {
-      title: '',
-      body: ''
-    }
-  },
-  methods: {
-    async sendMessage() {
-      const message = {
-        to: '/topics/test',
-        notification: {
-          title: this.title,
-          body: this.body
-        },
-        data: {
-          myKey: 'myValue'
-        }
-      };
-
-      try {
-        const response = await axios.post('https://fcm.googleapis.com/fcm/send', message, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `key=${process.env.FCM_SERVER_KEY}`
-          }
-        });
-        console.log('FCM API yanıtı:', response.data);
-      } catch (error) {
-        console.error('Bildirim gönderilemedi:', error);
-      }
+  async function sendMessage() {
+  const message = {
+    to: '/topics/test',
+    notification: {
+      title: 'Bildirim Başlığı',
+      body: 'Bildirim İçeriği'
     },
-    submit() {
-      this.sendMessage();
+    data: {
+      myKey: 'myValue'
     }
+  };
+
+  try {
+    const response = await axios.post('https://fcm.googleapis.com/fcm/send', message, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `key=${process.env.FCM_SERVER_KEY}`
+      }
+    });
+    console.log('FCM API yanıtı:', response.data);
+  } catch (error) {
+    console.error('Bildirim gönderilemedi:', error);
   }
 }
+}
 </script>
+
+
 
 <style>
 </style>

@@ -51,7 +51,6 @@ export default {
   modules: [
     
       '@nuxtjs/firebase',
-      '@nuxtjs/dotenv'
       
   ],
   firebase:{
@@ -80,19 +79,7 @@ export default {
     ],
     fcmPublicVapidKey: 'BFMVehN9w9lkv0fmUmgZjNBivQuzD7rCc19-_grigV3CQ5nxFoOautPwQv0sebpeSBvd_2VJAGKnnBPY-Pv5Qp8' // OPTIONAL : Sets vapid key for FCM after initialization
   },
-  workbox: {
-    dev: true,
-    importScripts: [
-      '~/public/firebase-messaging-sw.js'
-    ],
-    runtimeCaching: [
-      {
-        urlPattern: 'https://your-api-url.com/.*',
-        handler: 'cacheFirst',
-        method: 'GET'
-      }
-    ]
-  },
+    
   
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

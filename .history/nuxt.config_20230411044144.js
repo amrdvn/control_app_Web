@@ -51,7 +51,6 @@ export default {
   modules: [
     
       '@nuxtjs/firebase',
-      '@nuxtjs/dotenv'
       
   ],
   firebase:{
@@ -83,7 +82,7 @@ export default {
   workbox: {
     dev: true,
     importScripts: [
-      '~/public/firebase-messaging-sw.js'
+      '/firebase-messaging-sw.js'
     ],
     runtimeCaching: [
       {
@@ -92,7 +91,7 @@ export default {
         method: 'GET'
       }
     ]
-  },
+  }
   
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

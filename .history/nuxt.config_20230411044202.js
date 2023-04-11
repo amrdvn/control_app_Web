@@ -51,7 +51,6 @@ export default {
   modules: [
     
       '@nuxtjs/firebase',
-      '@nuxtjs/dotenv'
       
   ],
   firebase:{

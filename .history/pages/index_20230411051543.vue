@@ -3,7 +3,7 @@
     <menulist />
     <div class="content">
       <h1>Bildirim Gönder</h1>
-      <form @submit.prevent="submit">
+      <form @submit.prevent="sendMessage">
         <label for="baslik">Başlık:</label><br>
         <input type="text" id="baslik" name="baslik" v-model="title"><br><br>
         <label for="icerik">İçerik:</label><br>
@@ -19,7 +19,6 @@
 <script>
 import firebase from 'firebase/compat/app'
 import 'firebase/messaging'
-import axios from 'axios';
 
 
 import footerkismi from '~/components/footer-kismi.vue'
@@ -44,8 +43,8 @@ export default {
       const message = {
         to: '/topics/test',
         notification: {
-          title: this.title,
-          body: this.body
+          title: 'Bildirim Başlığı',
+          body: 'Bildirim İçeriği'
         },
         data: {
           myKey: 'myValue'
@@ -70,6 +69,8 @@ export default {
   }
 }
 </script>
+
+
 
 <style>
 </style>
