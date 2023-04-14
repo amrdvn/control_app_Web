@@ -20,5 +20,24 @@ if (!firebase.apps.length) {
 const auth = firebase.auth()
 const db = firebase.firestore()
 
+let messaging = null;
+
+if (typeof window !== 'undefined' && firebase.messaging.isSupported()) {
+  messaging = firebase.messaging();
+
+    .then((currentToken) => {
+      if (currentToken) {
+        console.log('Got FCM token:', currentToken);
+      } else {
+        console.log('No FCM token available.');
+      }
+    }).catch((err) => {
+      console.log('An error occurred while retrieving token. ', err);
+    });
+
+  messaging.onMessage((payload) => {
+    console.log('Received FCM message:', payload);
+  });
+}
 
 export { firebase, auth, db, messaging };

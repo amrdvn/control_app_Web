@@ -83,6 +83,7 @@ export default {
     importScripts: [
       'https://www.gstatic.com/firebasejs/9.0.2/firebase-app-compat.js',
       'https://www.gstatic.com/firebasejs/9.0.2/firebase-messaging-compat.js',
+      '/firebase-messaging-sw.js'
     ],
     config: {
       debug: true
