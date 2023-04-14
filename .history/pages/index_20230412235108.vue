@@ -1,0 +1,68 @@
+<template>
+  <div class="container">
+    <menulist />
+    <div class="content">
+      <h1>Bildirim Gönder</h1>
+      <form @submit.prevent="submit">
+        <label for="baslik">Başlık:</label><br>
+        <input type="text" id="baslik" name="baslik" v-model="title"><br><br>
+        <label for="icerik">İçerik:</label><br>
+        <textarea id="icerik" name="icerik" v-model="body"></textarea><br><br>
+        <button class="btn" type="submit">Bildirim Gönder</button>
+      </form>
+    </div>
+    <oturumacik />
+    <footerkismi />
+  </div>
+</template>
+<script>
+import footerkismi from '~/components/footer-kismi.vue'
+import menulist from '~/components/menu-list.vue'
+import oturumacik from '~/components/oturum-acik.vue'
+
+export default {
+  components: {
+    menulist,
+    oturumacik,
+    footerkismi
+  },
+  data() {
+    return {
+      title: '',
+      body: ''
+    }
+  },
+  methods: {
+    async submit() {
+      try {
+        // Notification permission check
+        const messaging = this.$fire.messaging
+        const { status: existingStatus } = await Notification.requestPermission()
+        let token
+        if (existingStatus === 'granted') {
+          // Get registration token. Initially this makes a network call, once retrieved
+          // subsequent calls to getToken will return from cache.
+          token = await messaging.getToken({ vapidKey: process.env.VAPID_KEY })
+        } else {
+          // If permission was not granted, show permission request.
+          console.log('No permission to send notifications')
+          return
+        }
+        console.log('token:', token)
+
+        // Send a message
+        await messaging.send({
+          token: token,
+          notification: {
+            title: this.title,
+            body: this.body
+          }
+        })
+        console.log('Notification sent successfully!')
+      } catch (error) {
+        console.error('Error sending notification:', error)
+      }
+    }
+  }
+}
+</script>

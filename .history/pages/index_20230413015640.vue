@@ -1,0 +1,55 @@
+<template>
+  <div class="container">
+    <menulist />
+    <div class="content">
+      <h1>Bildirim Gönder</h1>
+      <form @submit.prevent="submit">
+        <label for="baslik">Başlık:</label><br>
+        <input type="text" id="baslik" name="baslik" v-model="title"><br><br>
+        <label for="icerik">İçerik:</label><br>
+        <textarea id="icerik" name="icerik" v-model="body"></textarea><br><br>
+        <button class="btn" type="submit">Bildirim Gönder</button>
+      </form>
+    </div>
+    <oturumacik />
+    <footerkismi />
+  </div>
+</template>
+
+<script>
+import { db, messaging } from '~/plugins/firebase'
+
+export default {
+  components: {
+    menulist,
+    oturumacik,
+    footerkismi
+  },
+  data() {
+    return {
+      title: '',
+      body: ''
+    }
+  },
+  methods: {
+    async submit() {
+      const uid = await this.$auth.currentUser.uid
+      const currentToken = await messaging.getToken()
+      await db.collection('users').doc(uid).set({ token: currentToken }, { merge: true })
+      await messaging.requestPermission()
+      await messaging.getToken()
+      await messaging.onMessage((payload) => {
+        console.log('Message received. ', payload)
+      })
+      await db.collection('notifications').add({
+        title: this.title,
+        body: this.body,
+        created_at: new Date(),
+        uid: uid
+      })
+      this.title = ''
+      this.body = ''
+    }
+  }
+}
+</script>
