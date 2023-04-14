@@ -24,7 +24,7 @@
 
     <oturumacik />
     <footerkismi />
-
+    
   </div>
 </template>
 

@@ -75,6 +75,7 @@ html {
     position: absolute;
     bottom: 0;
     width: 98%;
+    border-top: 1px solid #ccc;
     height:38px;
   }
   .content input[type="text"], .content textarea {
