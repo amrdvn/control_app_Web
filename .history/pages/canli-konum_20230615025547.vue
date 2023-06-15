@@ -35,7 +35,7 @@ export default {
   mounted() {
     this.oturum();
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY2}`;
     script.defer = true;
     script.async = true;
     script.onload = this.mapYukle;
@@ -47,6 +47,7 @@ export default {
         console.log(user);
         this.user = user;
         this.markerGetir();
+        this.subscribeToLocationChanges();
       });
     },
     async markerGetir() {
@@ -67,39 +68,50 @@ export default {
 
         this.markers.push(marker);
       });
+
+      // Sayfa yüklendiğinde konuma yönel
+      if (this.markers.length > 0) {
+        const firstMarkerPosition = this.markers[0].getPosition();
+        this.map.setCenter(firstMarkerPosition);
+      }
     },
     mapYukle() {
-      this.map = new google.maps.Map(document.getElementById("map"), {
-        center: {
-          lat: this.markers.length > 0 ? this.markers[0].getPosition().lat() : 41.0174,
-          lng: this.markers.length > 0 ? this.markers[0].getPosition().lng() : 28.9883
-        },
-        zoom: 8,
-      });
+  this.map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 8,
+  });
 
-      this.markerGetir();
+  if (this.markers.length > 0) {
+    const firstMarker = this.markers[0];
+    const position = firstMarker.getPosition();
+    if (position && position.lat() && position.lng()) {
+      this.map.setCenter(position);
+    }
+  }
 
-      // Firestore'daki canlı konum verilerini dinlemek için bir listener ekle
+  this.markerGetir();
+},
+    subscribeToLocationChanges() {
       firebase
         .firestore()
         .collection('logs')
         .doc(this.user.uid)
         .collection('canli_konum')
         .onSnapshot(querySnapshot => {
-          this.markers.forEach(marker => {
-            marker.setMap(null); // Mevcut işaretçileri haritadan kaldır
-          });
-          this.markers = []; // Mevcut işaretçileri temizle
+          querySnapshot.docChanges().forEach(change => {
+            if (change.type === 'added') {
+              const data = change.doc.data();
+              const marker = new google.maps.Marker({
+                position: { lat: data.latitude, lng: data.longitude },
+                map: this.map,
+                title: `${new Date(data.tarih).toLocaleDateString()} ${new Date(data.tarih).toLocaleTimeString()}`,
+              });
 
-          querySnapshot.forEach(doc => {
-            const data = doc.data();
-            const marker = new google.maps.Marker({
-              position: { lat: data.latitude, lng: data.longitude },
-              map: this.map,
-              title: `${new Date(data.tarih).toLocaleDateString()} ${new Date(data.tarih).toLocaleTimeString()}`,
-            });
+              this.markers.push(marker);
 
-            this.markers.push(marker); // Yeni işaretçileri ekleyin
+              // Konum değiştiğinde haritayı güncelle
+              const lastMarkerPosition = this.markers[this.markers.length - 1].getPosition();
+              this.map.setCenter(lastMarkerPosition);
+            }
           });
         });
     },

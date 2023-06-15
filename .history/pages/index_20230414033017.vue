@@ -112,12 +112,10 @@ export default {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .then((response) => {
           alert('Bildirim Gönderildi.')
-          location.reload()
         })
         // eslint-disable-next-line n/handle-callback-err, @typescript-eslint/no-unused-vars
         .catch((error) => {
           alert('HATA :Bildirim gönderilemedi..')
-          location.reload()
         })
       this.title = ''
       this.body = ''

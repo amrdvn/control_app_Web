@@ -8,7 +8,6 @@
       <li><nuxt-link to="/canli-konum" exact class="link">Canlı Konum</nuxt-link></li>
       <li><nuxt-link to="/uygulamalar" exact class="link">Uygulama Geçmişi</nuxt-link></li>
       <li><nuxt-link to="/uygulama-kaldir" exact class="link">Uygulama Kaldır</nuxt-link></li>
-      <li><nuxt-link to="/uygulama-kullanim" exact class="link">Uygulama Kullanım</nuxt-link></li>
     </ul>
   </div>
 </template>

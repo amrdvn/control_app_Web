@@ -78,30 +78,6 @@ export default {
       });
 
       this.markerGetir();
-
-      // Firestore'daki canlı konum verilerini dinlemek için bir listener ekle
-      firebase
-        .firestore()
-        .collection('logs')
-        .doc(this.user.uid)
-        .collection('canli_konum')
-        .onSnapshot(querySnapshot => {
-          this.markers.forEach(marker => {
-            marker.setMap(null); // Mevcut işaretçileri haritadan kaldır
-          });
-          this.markers = []; // Mevcut işaretçileri temizle
-
-          querySnapshot.forEach(doc => {
-            const data = doc.data();
-            const marker = new google.maps.Marker({
-              position: { lat: data.latitude, lng: data.longitude },
-              map: this.map,
-              title: `${new Date(data.tarih).toLocaleDateString()} ${new Date(data.tarih).toLocaleTimeString()}`,
-            });
-
-            this.markers.push(marker); // Yeni işaretçileri ekleyin
-          });
-        });
     },
   },
 };
