@@ -2,17 +2,19 @@
   <div class="container">
     <menulist />
     <div class="content">
-      <h1>Uygulama Geçmişi Gör</h1>
+      <h1>Uygulama Kullanım Süresini Gör</h1>
 
       <table>
         <thead>
           <tr>
             <th>Uygulama Adı</th>
+            <th>İlk Kullanım</th>
             <th>Son Kullanım</th>
+            <th>Toplam Süre(1Aylık)</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(istatistik, index) in sortedIstatistikler" :key="index">
+          <tr v-for="(istatistik, index) in uygulamaIstatistikleri" :key="index">
             <td>{{ istatistik.uygulamaAdi }}</td>
             <td>{{ formatTarih(istatistik.sonKullanim)}}</td>
           </tr>
@@ -61,29 +63,18 @@ export default {
       })
   },
 
-  // eslint-disable-next-line vue/order-in-components
-  computed: {
-    sortedIstatistikler() {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      return this.uygulamaIstatistikleri.sort((a, b) => {
-        // En yeni süreleri karşılaştırarak sıralama yap
-        return new Date(b.sonKullanim) - new Date(a.sonKullanim);
-      });
-    }
-  },
+ methods: {
+  formatTarih(tarih) {
+    const date = new Date(tarih);
+    const yil = date.getFullYear();
+    const ay = ('0' + (date.getMonth() + 1)).slice(-2);
+    const gun = ('0' + date.getDate()).slice(-2);
+    const saat = ('0' + date.getHours()).slice(-2);
+    const dakika = ('0' + date.getMinutes()).slice(-2);
+    const saniye = ('0' + date.getSeconds()).slice(-2);
 
-  methods: {
-    formatTarih(tarih) {
-      const date = new Date(tarih);
-      const yil = date.getFullYear();
-      const ay = ('0' + (date.getMonth() + 1)).slice(-2);
-      const gun = ('0' + date.getDate()).slice(-2);
-      const saat = ('0' + date.getHours()).slice(-2);
-      const dakika = ('0' + date.getMinutes()).slice(-2);
-      const saniye = ('0' + date.getSeconds()).slice(-2);
-
-      return `${gun}.${ay}.${yil}  ${saat}:${dakika}:${saniye}`;
-    }
+    return `${gun}.${ay}.${yil}  ${saat}:${dakika}:${saniye}`;
   }
+}
 }
 </script>

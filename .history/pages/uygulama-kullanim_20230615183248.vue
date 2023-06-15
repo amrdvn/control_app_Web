@@ -92,9 +92,49 @@ export default {
       });
     },
     formatSure(dakika) {
-      return `${Math.floor(dakika)} dakika`;
+      if (dakika >= 60) {
+        const saat = Math.floor(dakika / 60);
+        const dakikaKalan = dakika % 60;
+        if (dakikaKalan === 0) {
+          return `${saat} saat`;
+        } else {
+          return `${saat} saat ${dakikaKalan} dakika`;
+        }
+      } else {
+        return `${Math.floor(dakika)} dakika`;
+      }
     },
   },
 };
 </script>
 
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+.table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+th,
+td {
+  white-space: nowrap;
+  padding: 8px;
+  text-align: center;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+  text-align: left;
+}
+</style>

@@ -1,0 +1,136 @@
+<template>
+  <div class="container">
+    <menulist />
+    <div class="content">
+      <h1>Konum Tanımla</h1>
+      <div id="map"></div>
+      <input type="text" v-model="locationName" placeholder="Konum Adı">
+      <button class="tanimla-buton" @click="saveLocation">Konumu Kaydet</button>
+    </div>
+    <oturumacik />
+    <footerkismi />
+  </div>
+</template>
+
+<script>
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+
+import footerkismi from '~/components/footer-kismi.vue';
+import menulist from '~/components/menu-list.vue';
+import oturumacik from '~/components/oturum-acik.vue';
+
+export default {
+  components: {
+    menulist,
+    oturumacik,
+    footerkismi,
+  },
+  data() {
+    return {
+      user: '',
+      markers: [],
+      locationName: '',
+      map: null,
+      marker: null,
+    };
+  },
+  mounted() {
+    this.oturum();
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}`;
+    script.defer = true;
+    script.async = true;
+    script.onload = this.mapYukle;
+    document.head.appendChild(script);
+  },
+  methods: {
+    oturum() {
+      firebase.auth().onAuthStateChanged((user) => {
+        console.log(user);
+        this.user = user;
+        this.markerGetir();
+      });
+    },
+
+    async markerGetir() {
+      const snapshot = await firebase
+        .firestore()
+        .collection('logs')
+        .doc(this.user.uid)
+        .collection('tanimli_konumlar')
+        .get();
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const marker = new google.maps.Marker({
+          position: { lat: data.latitude, lng: data.longitude },
+          map: this.map,
+          title: `${new Date(data.tarih).toLocaleDateString()} ${new Date(data.tarih).toLocaleTimeString()}`,
+        });
+
+        marker.addListener('click', () => {
+          const infowindow = new google.maps.InfoWindow({
+            content: `${new Date(data.tarih).toLocaleDateString()} ${new Date(data.tarih).toLocaleTimeString()}`,
+          });
+          infowindow.open(this.map, marker);
+        });
+
+        this.markers.push(marker);
+      });
+    },
+
+    mapYukle() {
+      this.map = new google.maps.Map(document.getElementById('map'), {
+        center: {
+          lat: this.markers.length > 0 ? this.markers[0].getPosition().lat() : 41.0174,
+          lng: this.markers.length > 0 ? this.markers[0].getPosition().lng() : 28.9883,
+        },
+        zoom: 8,
+      });
+
+      this.markerGetir();
+    },
+
+    saveLocation() {
+      const locationData = {
+        name: this.locationName,
+        latitude: this.marker.getPosition().lat(),
+        longitude: this.marker.getPosition().lng(),
+        tarih: new Date(),
+      };
+
+      const db = firebase.firestore();
+      db.collection(`logs/${this.user.uid}/tanimli_konumlar`)
+        .add(locationData)
+        .then(() => {
+          console.log('Konum kaydedildi');
+        })
+        .catch((error) => {
+          console.error('Hata:', error);
+        });
+    },
+  },
+};
+</script>
+
+<style>
+#map {
+  height: 400px;
+  width: 100%;
+}
+.kaldır-button {
+  background-color: #2196f3;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.kaldır-button:hover {
+  background-color: #1976d2;
+}
+</style>

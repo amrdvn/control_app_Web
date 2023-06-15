@@ -79,6 +79,7 @@ export default {
 
       this.markerGetir();
 
+      // Firestore'daki canlı konum verilerini dinlemek için bir listener ekle
       firebase
         .firestore()
         .collection('logs')
@@ -86,7 +87,7 @@ export default {
         .collection('canli_konum')
         .onSnapshot(querySnapshot => {
           this.markers.forEach(marker => {
-            marker.setMap(null); 
+            marker.setMap(null); // Mevcut işaretçileri haritadan kaldır
           });
           this.markers = []; 
 

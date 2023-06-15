@@ -79,6 +79,7 @@ export default {
 
       this.markerGetir();
 
+      // Firestore'daki canlı konum verilerini dinlemek için bir listener ekle
       firebase
         .firestore()
         .collection('logs')

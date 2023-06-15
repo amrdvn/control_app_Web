@@ -19,7 +19,8 @@
               <td>{{ uygulama.packageName }}</td>
               <td>{{ formatTarih(uygulama.firstTimeStamp) }}</td>
               <td>{{ formatTarih(uygulama.lastTimeStamp) }}</td>
-              <td>{{ formatSure(uygulama.totalTimeInForeground) }}</td>
+              <td>{{ dakikayaCevir(uygulama.totalTimeInForeground) }}</td>
+              <td>{{ saateCevir(uygulama.totalTimeInForeground) }}</td>
             </tr>
           </tbody>
         </table>
@@ -91,10 +92,25 @@ export default {
         this.uygulamalar = uygulamalar;
       });
     },
-    formatSure(dakika) {
-      return `${Math.floor(dakika)} dakika`;
+    dakikayaCevir(dakika) {
+      return Math.floor(dakika) + ' dakika';
+    },
+    saateCevir(dakika) {
+      const saat = Math.floor(dakika / 60);
+      const dakikaKalan = Math.floor(dakika % 60);
+      return saat + ' saat ' + dakikaKalan + ' dakika';
     },
   },
 };
 </script>
 
+<style scoped>
+.container {
+  position: relative;
+}
+.table-container {
+  height: 400px;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+</style>

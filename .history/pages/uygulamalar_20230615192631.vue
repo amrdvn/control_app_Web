@@ -46,6 +46,16 @@ export default {
     }
   },
 
+  computed: {
+    sortedIstatistikler() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return this.uygulamaIstatistikleri.sort((a, b) => {
+        // En yeni süreleri karşılaştırarak sıralama yapar
+        return new Date(b.sonKullanim) - new Date(a.sonKullanim);
+      });
+    }
+  },
+
   created() {
     const kullaniciUid = firebase.auth().currentUser.uid;
 
@@ -59,17 +69,6 @@ export default {
       .catch(error => {
         console.error(error);
       })
-  },
-
-  // eslint-disable-next-line vue/order-in-components
-  computed: {
-    sortedIstatistikler() {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      return this.uygulamaIstatistikleri.sort((a, b) => {
-        // En yeni süreleri karşılaştırarak sıralama yap
-        return new Date(b.sonKullanim) - new Date(a.sonKullanim);
-      });
-    }
   },
 
   methods: {

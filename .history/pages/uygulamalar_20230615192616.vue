@@ -61,12 +61,10 @@ export default {
       })
   },
 
-  // eslint-disable-next-line vue/order-in-components
   computed: {
     sortedIstatistikler() {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
       return this.uygulamaIstatistikleri.sort((a, b) => {
-        // En yeni süreleri karşılaştırarak sıralama yap
+        // En yeni süreleri karşılaştırarak sıralama yapar
         return new Date(b.sonKullanim) - new Date(a.sonKullanim);
       });
     }

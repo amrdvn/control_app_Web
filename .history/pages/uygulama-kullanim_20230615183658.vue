@@ -98,3 +98,36 @@ export default {
 };
 </script>
 
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  max-width: 100%;
+  overflow-y: auto;
+}
+
+.table {
+  width: fit-content;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+th,
+td {
+  white-space: nowrap;
+  padding: 8px;
+  text-align: center;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+  text-align: left;
+}
+</style>
