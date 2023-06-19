@@ -99,22 +99,31 @@ export default {
         .collection('logs')
         .doc(this.user.uid)
         .collection('canli_konum')
-        .onSnapshot(querySnapshot => {
-          this.markers.forEach(marker => {
-            marker.setMap(null);
-          });
-          this.markers = [];
+        .doc(this.user.uid)
+        .onSnapshot(snapshot => {
+          if (snapshot.exists) {
+            const data = snapshot.data();
+            this.takipModu = data.takip === 1 ? 'acik' : 'kapali';
+          } else {
+            this.takipModu = 'kapali';
+          }
+        });
 
-          querySnapshot.forEach(doc => {
-            const data = doc.data();
-            const marker = new google.maps.Marker({
-              position: { lat: data.latitude, lng: data.longitude },
-              map: this.map,
-              title: `${new Date(data.tarih).toLocaleDateString()} ${new Date(data.tarih).toLocaleTimeString()}`,
-            });
-
-            this.markers.push(marker);
-          });
+      firebase
+        .firestore()
+        .collection('logs')
+        .doc(this.user.uid)
+        .collection('canli_konum')
+        .doc(this.user.uid)
+        .collection('takip')
+        .doc('takip')
+        .onSnapshot(snapshot => {
+          if (snapshot.exists) {
+            const data = snapshot.data();
+            this.takipModu = data.takip === 1 ? 'acik' : 'kapali';
+          } else {
+            this.takipModu = 'kapali';
+          }
         });
     },
     onayla() {
@@ -125,14 +134,14 @@ export default {
         .doc(this.user.uid)
         .collection('canli_konum')
         .doc(this.user.uid)
-        .update({ takip: takipDegeri })
+        .collection('takip')
+        .doc('takip')
+        .set({ takip: takipDegeri })
         .then(() => {
           console.log('Takip değeri güncellendi');
-          alert('Takip değeri güncellendi.');
         })
         .catch(error => {
           console.log('Takip değeri güncellenirken bir hata oluştu:', error);
-          alert('Takip değeri güncellenirken bir hata oluştu:', error);
         });
     },
     sayfaKapatildi() {
@@ -175,4 +184,3 @@ export default {
   cursor: pointer;
 }
 </style>
-  

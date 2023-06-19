@@ -7,14 +7,16 @@
       <div class="location-tracking">
         <span class="label">Canlı konum takibi:</span>
         <label class="radio-label">
-          <input type="radio" value="kapali" v-model="takipModu" />
+          <input type="radio" value="kapali" v-model="trackingMode" />
+          <span class="radio-button"></span>
           Kapalı
         </label>
         <label class="radio-label">
-          <input type="radio" value="acik" v-model="takipModu" />
+          <input type="radio" value="acik" v-model="trackingMode" />
+          <span class="radio-button"></span>
           Açık
         </label>
-        <button class="onayla-button" @click="onayla">Onayla</button>
+        <button class="confirm-button" @click="onayla">Onayla</button>
       </div>
     </div>
     <oturumacik />
@@ -42,7 +44,6 @@ export default {
       user: null,
       markers: [],
       map: null,
-      takipModu: 'kapali',
     };
   },
   mounted() {
@@ -53,11 +54,6 @@ export default {
     script.async = true;
     script.onload = this.mapYukle;
     document.head.appendChild(script);
-
-    window.addEventListener('beforeunload', this.sayfaKapatildi);
-  },
-  beforeUnmount() {
-    window.removeEventListener('beforeunload', this.sayfaKapatildi);
   },
   methods: {
     oturum() {
@@ -73,15 +69,18 @@ export default {
         .collection('logs')
         .doc(this.user.uid)
         .collection('canli_konum')
-        .doc(this.user.uid)
         .get();
 
-      if (snapshot.exists) {
-        const data = snapshot.data();
-        this.takipModu = data.takip === 1 ? 'acik' : 'kapali';
-      } else {
-        this.takipModu = 'kapali';
-      }
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const marker = new google.maps.Marker({
+          position: { lat: data.latitude, lng: data.longitude },
+          map: this.map,
+          title: `${new Date(data.tarih).toLocaleDateString()} ${new Date(data.tarih).toLocaleTimeString()}`,
+        });
+
+        this.markers.push(marker);
+      });
     },
     mapYukle() {
       this.map = new google.maps.Map(document.getElementById("map"), {
@@ -101,9 +100,9 @@ export default {
         .collection('canli_konum')
         .onSnapshot(querySnapshot => {
           this.markers.forEach(marker => {
-            marker.setMap(null);
+            marker.setMap(null); 
           });
-          this.markers = [];
+          this.markers = []; 
 
           querySnapshot.forEach(doc => {
             const data = doc.data();
@@ -113,30 +112,9 @@ export default {
               title: `${new Date(data.tarih).toLocaleDateString()} ${new Date(data.tarih).toLocaleTimeString()}`,
             });
 
-            this.markers.push(marker);
+            this.markers.push(marker); 
           });
         });
-    },
-    onayla() {
-      const takipDegeri = this.takipModu === 'acik' ? 1 : 0;
-      firebase
-        .firestore()
-        .collection('logs')
-        .doc(this.user.uid)
-        .collection('canli_konum')
-        .doc(this.user.uid)
-        .update({ takip: takipDegeri })
-        .then(() => {
-          console.log('Takip değeri güncellendi');
-          alert('Takip değeri güncellendi.');
-        })
-        .catch(error => {
-          console.log('Takip değeri güncellenirken bir hata oluştu:', error);
-          alert('Takip değeri güncellenirken bir hata oluştu:', error);
-        });
-    },
-    sayfaKapatildi() {
-      this.onayla();
     },
   },
 };
@@ -147,7 +125,6 @@ export default {
   height: 400px;
   width: 100%;
 }
-
 .location-tracking {
   display: flex;
   align-items: center;
@@ -175,4 +152,3 @@ export default {
   cursor: pointer;
 }
 </style>
-  

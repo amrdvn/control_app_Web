@@ -99,14 +99,10 @@ export default {
         .collection('logs')
         .doc(this.user.uid)
         .collection('canli_konum')
-        .onSnapshot(querySnapshot => {
-          this.markers.forEach(marker => {
-            marker.setMap(null);
-          });
-          this.markers = [];
-
-          querySnapshot.forEach(doc => {
-            const data = doc.data();
+        .doc(this.user.uid)
+        .onSnapshot(snapshot => {
+          if (snapshot.exists) {
+            const data = snapshot.data();
             const marker = new google.maps.Marker({
               position: { lat: data.latitude, lng: data.longitude },
               map: this.map,
@@ -114,7 +110,7 @@ export default {
             });
 
             this.markers.push(marker);
-          });
+          }
         });
     },
     onayla() {
@@ -125,14 +121,12 @@ export default {
         .doc(this.user.uid)
         .collection('canli_konum')
         .doc(this.user.uid)
-        .update({ takip: takipDegeri })
+        .set({ takip: takipDegeri })
         .then(() => {
           console.log('Takip değeri güncellendi');
-          alert('Takip değeri güncellendi.');
         })
         .catch(error => {
           console.log('Takip değeri güncellenirken bir hata oluştu:', error);
-          alert('Takip değeri güncellenirken bir hata oluştu:', error);
         });
     },
     sayfaKapatildi() {
@@ -175,4 +169,3 @@ export default {
   cursor: pointer;
 }
 </style>
-  

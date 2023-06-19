@@ -128,11 +128,9 @@ export default {
         .update({ takip: takipDegeri })
         .then(() => {
           console.log('Takip değeri güncellendi');
-          alert('Takip değeri güncellendi.');
         })
         .catch(error => {
           console.log('Takip değeri güncellenirken bir hata oluştu:', error);
-          alert('Takip değeri güncellenirken bir hata oluştu:', error);
         });
     },
     sayfaKapatildi() {
@@ -175,4 +173,3 @@ export default {
   cursor: pointer;
 }
 </style>
-  

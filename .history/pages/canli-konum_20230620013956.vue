@@ -128,11 +128,11 @@ export default {
         .update({ takip: takipDegeri })
         .then(() => {
           console.log('Takip değeri güncellendi');
-          alert('Takip değeri güncellendi.');
+                    alert('HATA :Bildirim gönderilemedi..')
+
         })
         .catch(error => {
           console.log('Takip değeri güncellenirken bir hata oluştu:', error);
-          alert('Takip değeri güncellenirken bir hata oluştu:', error);
         });
     },
     sayfaKapatildi() {

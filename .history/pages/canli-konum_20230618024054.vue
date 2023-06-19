@@ -73,14 +73,11 @@ export default {
         .collection('logs')
         .doc(this.user.uid)
         .collection('canli_konum')
-        .doc(this.user.uid)
+        .doc('takip')
         .get();
 
       if (snapshot.exists) {
-        const data = snapshot.data();
-        this.takipModu = data.takip === 1 ? 'acik' : 'kapali';
-      } else {
-        this.takipModu = 'kapali';
+        this.takipModu = snapshot.data().takip === 1 ? 'acik' : 'kapali';
       }
     },
     mapYukle() {
@@ -101,9 +98,9 @@ export default {
         .collection('canli_konum')
         .onSnapshot(querySnapshot => {
           this.markers.forEach(marker => {
-            marker.setMap(null);
+            marker.setMap(null); 
           });
-          this.markers = [];
+          this.markers = []; 
 
           querySnapshot.forEach(doc => {
             const data = doc.data();
@@ -113,26 +110,24 @@ export default {
               title: `${new Date(data.tarih).toLocaleDateString()} ${new Date(data.tarih).toLocaleTimeString()}`,
             });
 
-            this.markers.push(marker);
+            this.markers.push(marker); 
           });
         });
     },
     onayla() {
-      const takipDegeri = this.takipModu === 'acik' ? 1 : 0;
+      const takipDegeri = this.takipModu === "acik" ? 1 : 0;
       firebase
         .firestore()
         .collection('logs')
         .doc(this.user.uid)
         .collection('canli_konum')
-        .doc(this.user.uid)
-        .update({ takip: takipDegeri })
+        .doc('takip')
+        .set({ takip: takipDegeri })
         .then(() => {
           console.log('Takip değeri güncellendi');
-          alert('Takip değeri güncellendi.');
         })
         .catch(error => {
           console.log('Takip değeri güncellenirken bir hata oluştu:', error);
-          alert('Takip değeri güncellenirken bir hata oluştu:', error);
         });
     },
     sayfaKapatildi() {
@@ -175,4 +170,3 @@ export default {
   cursor: pointer;
 }
 </style>
-  
